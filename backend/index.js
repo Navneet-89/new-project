@@ -2,14 +2,12 @@ const express = require('express');
 const { createTodo, updateTodo } = require('./types');
 const { ParseStatus } = require('zod');
 const { todo } = require('./db');
-const port = 3000;
+const port = 3001;
 const app = express();
 
 app.use(express.json());
 
-app
-   
-    .post("/todo",async function(req,res){
+app.post("/todo",async function(req,res){
         const createPayload = req.body;
         const parsePayload = createTodo;
         if(!parsePayload.success){
@@ -27,14 +25,15 @@ app
         res.json({
             msg: "Todo created"
         })
-    })
-    .get("/todos",async function(req,res){
+    });
+
+app.get("/todos",async function(req,res){
         const todos = await todo.find({});
         res.json({
             todos
         })
-    })
-    .put("/completed",async function(req,res){
+    });
+app.put("/completed",async function(req,res){
         const updatePayload = req.body;
         const parsePayload = updateTodo.safeParse(updatePayload);
         if(!parsePayload.success){
@@ -49,10 +48,10 @@ app
             completed: true
         })
         res.json({
-            msg: "Todo marked as completed"
+            msg: "Todo marked as completed",
         })
 
-    })
+    });
 
 app.listen(port,()=>{
     console.log(`server is running at ${port}`);
